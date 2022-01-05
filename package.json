@@ -4,7 +4,11 @@
   "description": "### 特点：高性能的ts拖拽库",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint --cache --fix --ext .js,.jsx,.ts,.tsx src",
+    "prettier": "prettier --write .",
+    "commit": "git-cz",
+    "prepare": "npx husky install"
   },
   "repository": {
     "type": "git",
@@ -20,5 +24,32 @@
   "bugs": {
     "url": "https://github.com/0-Captain/draggable-ts/issues"
   },
-  "homepage": "https://github.com/0-Captain/draggable-ts#readme"
+  "homepage": "https://github.com/0-Captain/draggable-ts#readme",
+  "devDependencies": {
+    "@commitlint/config-conventional": "^16.0.0",
+    "@typescript-eslint/eslint-plugin": "^5.8.1",
+    "@typescript-eslint/parser": "^5.9.0",
+    "commitlint": "^16.0.1",
+    "eslint": "^8.6.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "git-cz": "^4.8.0",
+    "husky": "^7.0.4",
+    "lint-staged": "^12.1.5",
+    "prettier": "^2.5.1",
+    "typescript": "^4.5.4"
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "lint-staged": {
+    "*": [
+      "prettier --write --ignore-unknown"
+    ],
+    "src/**/*.{js,ts,tsx}": [
+      "eslint --cache --fix"
+    ]
+  }
 }
