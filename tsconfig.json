@@ -13,6 +13,8 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
+    "declaration": true,
+    "declarationDir": "dist",
     "noFallthroughCasesInSwitch": true
   },
   "include": ["src"],

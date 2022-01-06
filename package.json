@@ -2,10 +2,11 @@
   "name": "draggable-ts",
   "version": "1.0.0",
   "description": "### 高性能的ts通用拖拽库",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "rm -rf dist && node ./script/build.js",
+    "build": "rm -rf dist && rollup --config",
+    "dev": "rollup --config --watch",
     "lint": "eslint --cache --fix --ext .js,.jsx,.ts,.tsx src",
     "prettier": "prettier --write .",
     "commit": "git-cz",
@@ -28,10 +29,10 @@
   "homepage": "https://github.com/0-Captain/draggable-ts#readme",
   "devDependencies": {
     "@commitlint/config-conventional": "^16.0.0",
+    "@rollup/plugin-typescript": "^8.3.0",
     "@typescript-eslint/eslint-plugin": "^5.8.1",
     "@typescript-eslint/parser": "^5.9.0",
     "commitlint": "^16.0.1",
-    "esbuild": "^0.14.10",
     "eslint": "^8.6.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
@@ -39,6 +40,7 @@
     "husky": "^7.0.4",
     "lint-staged": "^12.1.5",
     "prettier": "^2.5.1",
+    "rollup": "^2.63.0",
     "typescript": "^4.5.4"
   },
   "commitlint": {
