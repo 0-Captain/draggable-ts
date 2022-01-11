@@ -78,7 +78,7 @@ export class Emitter<Events extends BaseEmitterEvents = BaseEmitterEvents> {
     const caughtErrors = [];
 
     const sortedCallbacks = Array.from(callbackMap.keys()).sort(
-      (a, b) => (callbackMap.get(a) || 0) - (callbackMap.get(b) || 0)
+      (a, b) => (callbackMap.get(b) || 0) - (callbackMap.get(a) || 0)
     );
 
     for (const cb of sortedCallbacks) {

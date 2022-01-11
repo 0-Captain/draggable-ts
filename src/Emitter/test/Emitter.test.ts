@@ -106,3 +106,22 @@ test("catches errors from listeners and re-throws at the end of the trigger phas
   expect(callbacks[0]).toHaveBeenCalled();
   expect(callbacks[2]).toHaveBeenCalled();
 });
+
+test("trigger callbacks order by priority", async () => {
+  const testEvent = new TestEvent();
+
+  const callOrder: number[] = [];
+  const callbacks = [
+    [jest.fn().mockImplementation(() => callOrder.push(3)), 5] as const,
+    [jest.fn().mockImplementation(() => callOrder.push(1)), -5] as const,
+    [jest.fn().mockImplementation(() => callOrder.push(2))] as const,
+  ];
+
+  callbacks.forEach((cb) => {
+    emitter.on(TestEventType, cb[0], cb[1]);
+  });
+
+  await emitter.trigger(testEvent);
+
+  expect(callOrder).toEqual([3, 2, 1]);
+});
