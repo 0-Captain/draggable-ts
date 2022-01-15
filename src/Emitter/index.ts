@@ -68,7 +68,6 @@ export class Emitter<Events extends BaseEmitterEvents = BaseEmitterEvents> {
    * @param {AbstractEvent} event
    */
   async trigger(event: AbstractEvent) {
-    event = event as any;
     const type = event.type as keyof Events;
     const callbackMap = this.callbacks[type];
     if (!callbackMap) {

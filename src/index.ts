@@ -1,35 +1,77 @@
-export interface Options {
+import { Emitter } from "./Emitter";
+import { Sensor, Delay } from "./Sensors";
+
+export interface DraggableOptions {
   container: string; // 拖拽容器
   draggable: string; // 容器中可拖拽的元素
   dropable: string;
-  // delay: number;
+  condition: {
+    delay?:
+      | number
+      | {
+          mouse: number;
+          touch: number;
+          drag: number;
+        };
+    distance: number;
+  };
+  sensors: Array<typeof Sensor>;
 }
 
 export class Draggable {
-  // container = document.querySelector(this.option.container);
-  // draggableElements = new WeakSet(document.querySelectorAll(this.option.dropable));
-  // dropableElements = document.querySelectorAll(this.option.dropable || this.option.draggable);
+  emitter = new Emitter();
 
-  constructor(public options: Options) {
-    for (const [key, val] of Object.entries(this.optionValidator)) {
-      if (val.success == false) {
-        throw new Error(
-          `option error: ${key} are expected to be of type ${val.expect}`
-        );
-      }
-    }
+  sensors: Set<Sensor> = new Set();
+  condition = {
+    delay: new Delay(this.options.condition.delay),
+    distance: this.options.condition.distance || 0,
+  };
+
+  container = document.querySelector(this.options.container) || document.body;
+
+  draggableElementSet = new WeakSet(
+    document.querySelectorAll(this.options.draggable)
+  );
+  dropableElementSet = new WeakSet(
+    document.querySelectorAll(this.options.dropable)
+  );
+
+  constructor(public options: DraggableOptions) {
+    //
+    options.sensors.forEach((sensor) => this.addSensor(sensor));
+
+    this.emitter.on("drag:start", () => this.onDragStart);
+    this.emitter.on("drag:move", this.onDragMove);
+    this.emitter.on("drag:end", this.onDragEnd);
   }
 
-  optionValidator = {
-    container: {
-      success: typeof this.options.container == "string",
-      expect: "string",
-    },
-    draggable: {
-      success: typeof this.options.container == "string",
-      expect: "string",
-    },
+  onDragStart = () => {
+    //
   };
+
+  onDragMove = () => {
+    //
+  };
+
+  onDragEnd = () => {
+    //
+  };
+
+  addSensor(Sen: typeof Sensor) {
+    const instanceSensor = new Sen({
+      condition: this.condition,
+      emitter: this.emitter,
+      container: this.container,
+      draggableElementSet: this.draggableElementSet,
+    });
+    instanceSensor.attach();
+    this.sensors.add(instanceSensor);
+  }
+
+  removeSensor(sensor: Sensor) {
+    sensor.detach();
+    this.sensors.delete(sensor);
+  }
 }
 
 export type Test = string;

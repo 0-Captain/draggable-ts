@@ -15,6 +15,7 @@
     "noEmit": true,
     "declaration": true,
     "declarationDir": "dist",
+    "downlevelIteration": true,
     "noFallthroughCasesInSwitch": true
   },
   "include": ["src"],

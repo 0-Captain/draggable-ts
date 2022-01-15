@@ -11,7 +11,7 @@ declare global {
 }
 
 expect.extend({
-  isMapKey(map: Map<any, any>, key: any) {
+  isMapKey(map: Map<unknown, unknown>, key: unknown) {
     const pass = map.has(key);
 
     if (pass) {
@@ -29,10 +29,12 @@ expect.extend({
 });
 
 const TestEventType = "test:event";
-
+const props = {
+  originalEvent: new Event("testEvent"),
+  source: document.createElement("div"),
+};
 class TestEvent extends AbstractEvent {
   static type = TestEventType;
-  originalEvent = new Event("testEvent");
 }
 
 interface TestEmitterEvents extends BaseEmitterEvents {
@@ -66,7 +68,8 @@ test("removes a callback by event type", () => {
 });
 
 test("triggers callbacks on event with test event", () => {
-  const testEvent = new TestEvent();
+  const testEvent = new TestEvent(props);
+
   const callback = jest.fn();
 
   emitter.on(TestEventType, callback);
@@ -79,7 +82,7 @@ test("triggers callbacks on event with test event", () => {
 test("catches errors from listeners and re-throws at the end of the trigger phase", async () => {
   const consoleErrorSpy = jest.fn();
 
-  const testEvent = new TestEvent();
+  const testEvent = new TestEvent(props);
   const error = new Error("Error");
   const callbacks = [
     jest.fn(),
@@ -108,7 +111,7 @@ test("catches errors from listeners and re-throws at the end of the trigger phas
 });
 
 test("trigger callbacks order by priority", async () => {
-  const testEvent = new TestEvent();
+  const testEvent = new TestEvent(props);
 
   const callOrder: number[] = [];
   const callbacks = [
