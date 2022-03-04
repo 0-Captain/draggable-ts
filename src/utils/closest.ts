@@ -8,11 +8,11 @@
  * @return {Element|undefined}
  */
 export function closestParent(
-  element: HTMLElement,
+  element: HTMLElement | null,
   parentSet: WeakSet<HTMLElement>
 ) {
   if (!element) {
-    return undefined;
+    return null;
   }
 
   let current = element;
@@ -29,5 +29,5 @@ export function closestParent(
     current !== document.documentElement
   );
 
-  return undefined;
+  return null;
 }

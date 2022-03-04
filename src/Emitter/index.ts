@@ -1,12 +1,32 @@
 // import { AbstractEvent } from "../Events/AbstractEvent";
 
+import {
+  MirrorCreateEvent,
+  MirrorDestroyEvent,
+  MirrorMoveEvent,
+} from "@plugins/Mirror/MirrorEvents";
 import { AbstractEvent } from "../Events";
-import { DraggableInit } from "../Events/DragEvents";
+import {
+  DragEndEvent,
+  DragMoveEvent,
+  DragStartEvent,
+} from "../Events/DragEvents";
+import {
+  DragMoveSensorEvent,
+  DragStartSensorEvent,
+  DragStopSensorEvent,
+} from "../Sensors/SensorEvents";
 
 export interface BaseEmitterEvents {
-  "drag:start": DraggableInit;
-  "drag:move": DraggableInit;
-  "drag:end": DraggableInit;
+  "drag:start": DragStartEvent;
+  "drag:move": DragMoveEvent;
+  "drag:end": DragEndEvent;
+  "sensor:dragstart": DragStartSensorEvent;
+  "sensor:dragmove": DragMoveSensorEvent;
+  "sensor:dragstop": DragStopSensorEvent;
+  "mirror:create": MirrorCreateEvent;
+  "mirror:move": MirrorMoveEvent;
+  "mirror:destroy": MirrorDestroyEvent;
 }
 
 /**
@@ -23,7 +43,7 @@ export class Emitter<Events extends BaseEmitterEvents = BaseEmitterEvents> {
     this.callbacks = {};
   }
 
-  get events() {
+  get listeners() {
     return this.callbacks;
   }
 
@@ -52,14 +72,14 @@ export class Emitter<Events extends BaseEmitterEvents = BaseEmitterEvents> {
    * @param {String} type
    * @param {Function} callback
    */
-  off(type: keyof Events, callback: () => void) {
+  off<EventTypes extends keyof Events>(
+    type: EventTypes,
+    callback: (e: Events[EventTypes]) => void
+  ) {
     const callbacks = this.callbacks[type];
-    if (!callbacks) {
-      return null;
+    if (callbacks) {
+      callbacks.delete(callback);
     }
-
-    callbacks.delete(callback);
-
     return this;
   }
 
@@ -81,8 +101,8 @@ export class Emitter<Events extends BaseEmitterEvents = BaseEmitterEvents> {
     );
 
     for (const cb of sortedCallbacks) {
+      await cb(event);
       try {
-        await cb(event);
       } catch (error) {
         caughtErrors.push(error);
       }

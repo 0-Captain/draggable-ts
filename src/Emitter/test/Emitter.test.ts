@@ -1,15 +1,5 @@
 import { AbstractEvent } from "../../Events";
 import { Emitter, BaseEmitterEvents } from "../../Emitter";
-
-declare global {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
-  namespace jest {
-    interface Matchers<R> {
-      isMapKey(key: unknown): R;
-    }
-  }
-}
-
 expect.extend({
   isMapKey(map: Map<unknown, unknown>, key: unknown) {
     const pass = map.has(key);
@@ -52,7 +42,7 @@ test("registers a callback by event type", () => {
 
   emitter.on(TestEventType, callback);
 
-  expect(emitter.events[TestEventType]).isMapKey(callback);
+  expect(emitter.listeners[TestEventType]).isMapKey(callback);
 });
 
 test("removes a callback by event type", () => {
@@ -60,11 +50,11 @@ test("removes a callback by event type", () => {
 
   emitter.on(TestEventType, callback);
 
-  expect(emitter.events[TestEventType]).isMapKey(callback);
+  expect(emitter.listeners[TestEventType]).isMapKey(callback);
 
   emitter.off(TestEventType, callback);
 
-  expect(emitter.events[TestEventType]).not.isMapKey(callback);
+  expect(emitter.listeners[TestEventType]).not.isMapKey(callback);
 });
 
 test("triggers callbacks on event with test event", () => {

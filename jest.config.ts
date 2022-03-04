@@ -1,19 +1,19 @@
 // jest.config.ts
-import type { InitialOptionsTsJest } from "ts-jest";
+import { InitialOptionsTsJest, pathsToModuleNameMapper } from "ts-jest";
 import { defaults as tsjPreset } from "ts-jest/presets";
-// import { defaultsESM as tsjPreset } from 'ts-jest/presets'
-// import { jsWithTs as tsjPreset } from 'ts-jest/presets'
-// import { jsWithTsESM as tsjPreset } from 'ts-jest/presets'
-// import { jsWithBabel as tsjPreset } from 'ts-jest/presets'
-// import { jsWithBabelESM as tsjPreset } from 'ts-jest/presets'
+import { compilerOptions } from "./tsconfig.json";
 
 const config: InitialOptionsTsJest = {
   // [...]
+  preset: "ts-jest",
   transform: {
     ...tsjPreset.transform,
     // [...]
   },
   testEnvironment: "jsdom",
+  moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {
+    prefix: "<rootDir>/",
+  }),
 };
 
 export default config;

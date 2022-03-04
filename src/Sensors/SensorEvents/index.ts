@@ -2,8 +2,8 @@ import { AbstractEvent } from "../../Events";
 
 interface SensorEventProps {
   originalEvent: Event;
-  source?: Element;
-  target?: Element | null;
+  source: HTMLElement;
+  target: HTMLElement | null;
   pageX: number;
   pageY: number;
   clientX: number;
@@ -21,7 +21,11 @@ export class SensorEvent extends AbstractEvent {
   }
 
   get target() {
-    return this.options.target || this.originalEvent.target;
+    return this.options.target;
+  }
+
+  get source() {
+    return this.options.source;
   }
 
   get pageX() {
@@ -42,13 +46,13 @@ export class SensorEvent extends AbstractEvent {
 }
 
 export class DragStartSensorEvent extends SensorEvent {
-  static type = "drag:start";
+  static type = "sensor:dragstart";
 }
 
 export class DragMoveSensorEvent extends SensorEvent {
-  static type = "drag:move";
+  static type = "sensor:dragmove";
 }
 
 export class DragStopSensorEvent extends SensorEvent {
-  static type = "drag:stop";
+  static type = "sensor:dragstop";
 }

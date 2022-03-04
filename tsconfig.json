@@ -16,8 +16,16 @@
     "declaration": true,
     "declarationDir": "dist",
     "downlevelIteration": true,
+    "rootDir": ".",
+    "baseUrl": ".",
+    "paths": {
+      "@sensors/*": ["src/Sensors/*"],
+      "@plugins/*": ["src/Plugins/*"],
+      "@utils": ["src/utils/index"],
+      "@events/*": ["/src/Events"]
+    },
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"],
+  "include": ["src", "*.d.ts", "test"],
   "exclude": ["node_modules"]
 }

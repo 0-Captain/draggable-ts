@@ -1,4 +1,4 @@
-import { closest, distance as calcDistance } from "../../utils";
+import { closest, distance as calcDistance } from "@utils";
 import { Sensor, SensorOptions } from "..";
 import {
   DragStartSensorEvent,
@@ -17,7 +17,7 @@ type EventHandler = (e: any) => any;
  */
 export class MouseSensor extends Sensor {
   // Mouse down timer which will end up triggering the drag start operation
-  mouseDownTimeout?: number;
+  mouseDownTimerId?: number;
   dragging = false;
   initPosition = {
     pageX: 0,
@@ -71,18 +71,25 @@ export class MouseSensor extends Sensor {
       return;
     }
 
-    // const source = closest(
-    //   event.target as HTMLElement,
-    //   this.draggableELementSet
-    // );
-    // if (!source) {
-    //   return;
-    // }
-    // this.source = source;
+    const draggableElement = closest(
+      (event.target ||
+        document.elementFromPoint(event.clientX, event.clientY)) as HTMLElement,
+      this.draggableELementSet
+    );
+    if (!draggableElement) {
+      return;
+    }
+    // console.log("mouse down");
+    this.source = draggableElement;
 
     // 记录mousedown时的相关信息
     const { pageX, pageY, clientX, clientY } = event;
     this.initPosition = { pageX, pageY, clientX, clientY };
+
+    this.target = document.elementFromPoint(
+      event.clientX,
+      event.clientY
+    ) as HTMLElement;
 
     this.mouseDownEvent = event;
 
@@ -91,13 +98,10 @@ export class MouseSensor extends Sensor {
       preventNativeDragStart,
       this.onDistanceChange
     );
-    // document.addEventListener("mouseup", this.onMouseUp);
-    // document.addEventListener("dragstart", preventNativeDragStart);
-    // document.addEventListener("mousemove", this.onDistanceChange);
 
-    this.mouseDownTimeout = window.setTimeout(() => {
+    this.mouseDownTimerId = window.setTimeout(() => {
       this.isDelay = true;
-      this.onDistanceChange({ pageX, pageY });
+      this.onDistanceChange({ pageX, pageY }, true);
     }, this.delay.mouse);
   };
 
@@ -107,22 +111,25 @@ export class MouseSensor extends Sensor {
    * @private
    * @param {Event} event - Mouse move event
    */
-  onDistanceChange = (event: MouseEvent | { pageX: number; pageY: number }) => {
+  onDistanceChange = (
+    event: MouseEvent | { pageX: number; pageY: number },
+    enable = false
+  ) => {
+    // console.log("onDistanceChange");
     const { pageX, pageY } = event;
-    const { initPosition, delay, distance } = this;
+    const { initPosition, distance } = this;
+    this.removeEvents(this.onDistanceChange);
 
-    if (!delay) {
+    if (!enable) {
       // moved during delay
-      clearTimeout(this.mouseDownTimeout);
-      document.removeEventListener("mousemove", this.onDistanceChange);
+      clearTimeout(this.mouseDownTimerId);
       return;
     }
 
     const distanceTravelled =
       calcDistance(initPosition.pageX, initPosition.pageY, pageX, pageY) || 0;
 
-    if (distanceTravelled >= (distance || 0)) {
-      document.removeEventListener("mousemove", this.onDistanceChange);
+    if (distanceTravelled >= distance) {
       this.startDrag();
     }
   };
@@ -131,17 +138,19 @@ export class MouseSensor extends Sensor {
    * Start the drag
    * @private
    */
-  startDrag = () => {
+  startDrag = async () => {
+    // console.log("start drag");
     const startEvent = this.startEvent;
     const { source, initPosition } = this;
 
     const dragStartEvent = new DragStartSensorEvent({
       source,
+      target: this.target,
       originalEvent: startEvent,
       ...initPosition,
     });
 
-    this.trigger(dragStartEvent);
+    await this.trigger(dragStartEvent);
 
     this.dragging = true;
     if (this.dragging) {
@@ -150,7 +159,8 @@ export class MouseSensor extends Sensor {
         this.onContextMenuWhileDragging,
         true
       );
-      document.addEventListener("mousemove", this.onMouseMove);
+
+      this.addEvents(this.onMouseMove);
     }
   };
 
@@ -159,26 +169,34 @@ export class MouseSensor extends Sensor {
    * @private
    * @param {Event} event - Mouse move event
    */
-  onMouseMove = (event: MouseEvent) => {
-    if (!this.dragging) {
+  onMouseMove = async (event: MouseEvent) => {
+    // console.log("mouse move");
+    if (!this.dragging || !event.target) {
       return;
     }
 
     const { pageX, pageY, clientX, clientY } = event;
 
-    const target = document.elementFromPoint(event.clientX, event.clientY);
-
+    /**
+     * elementFromPoint：获取视觉上最顶层的元素（不同层级中更高层级的元素，同一层级中最内层的元素）
+     * 通常情况下elementFromPoint和event target相同，但是不同设备或浏览器中可能会有差异，例如ios设备上，touchmove时，获取不到手指指向的元素，
+     */
+    this.target = document.elementFromPoint(
+      event.clientX,
+      event.clientY
+    ) as HTMLElement;
+    // console.log(target == event.target);
     const dragMoveEvent = new DragMoveSensorEvent({
       source: this.source,
+      target: this.target,
       clientX,
       clientY,
       pageX,
       pageY,
-      target,
       originalEvent: event,
     });
 
-    this.trigger(dragMoveEvent);
+    await this.trigger(dragMoveEvent);
   };
 
   /**
@@ -186,8 +204,9 @@ export class MouseSensor extends Sensor {
    * @private
    * @param {Event} event - Mouse up event
    */
-  onMouseUp = (event: MouseEvent) => {
-    clearTimeout(this.mouseDownTimeout);
+  onMouseUp = async (event: MouseEvent) => {
+    // console.log("mouse up");
+    clearTimeout(this.mouseDownTimerId);
 
     if (event.button !== 0) {
       return;
@@ -198,15 +217,15 @@ export class MouseSensor extends Sensor {
       preventNativeDragStart,
       this.onDistanceChange
     );
-    // document.removeEventListener("mouseup", this.onMouseUp);
-    // document.removeEventListener("dragstart", preventNativeDragStart);
-    // document.removeEventListener("mousemove", this.onDistanceChange);
 
     if (!this.dragging) {
       return;
     }
 
-    const target = document.elementFromPoint(event.clientX, event.clientY);
+    this.target = document.elementFromPoint(
+      event.clientX,
+      event.clientY
+    ) as HTMLElement;
 
     const { clientX, clientY, pageX, pageY } = event;
 
@@ -215,12 +234,12 @@ export class MouseSensor extends Sensor {
       clientY,
       pageX,
       pageY,
-      target,
+      target: this.target,
       source: this.source,
       originalEvent: event,
     });
 
-    this.trigger(dragStopEvent);
+    await this.trigger(dragStopEvent);
 
     document.removeEventListener(
       "contextmenu",
@@ -269,5 +288,6 @@ export class MouseSensor extends Sensor {
 }
 
 function preventNativeDragStart(event: Event) {
+  // console.log("prevent");
   event.preventDefault();
 }

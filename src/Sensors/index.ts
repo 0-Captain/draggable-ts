@@ -1,4 +1,5 @@
-import { DraggableOptions } from "..";
+import { format } from "prettier";
+import { Condition } from "../draggable";
 import { Emitter } from "../Emitter";
 import { SensorEvent } from "./SensorEvents";
 
@@ -8,7 +9,7 @@ export interface SensorOptions {
     distance: number;
   };
   emitter: Emitter;
-  container: Element;
+  // container: Element;
   draggableElementSet: WeakSet<Element>;
 }
 
@@ -19,7 +20,7 @@ export interface SensorOptions {
  */
 export class Sensor {
   dragging = false;
-  readonly container = this.options.container;
+  // readonly container = this.options.container;
   readonly emitter = this.options.emitter;
   readonly delay = this.options.condition.delay;
   readonly draggableELementSet = this.options.draggableElementSet;
@@ -29,7 +30,15 @@ export class Sensor {
   moveEvent: Event = new Event("");
   endEvent: Event = new Event("");
 
+  /**
+   * @description: 正在拖拽的元素，代表可拖动的DOM节点
+   */
   source: HTMLElement = document.createElement("div");
+
+  /**
+   * @description: 当前坐标下方的元素，document.elementFromPoint(x,y)计算得到
+   */
+  target: HTMLElement | null = null;
 
   constructor(private options: SensorOptions) {
     // if (!(options.emitter instanceof Emitter)) {
@@ -42,7 +51,7 @@ export class Sensor {
    * @return {Sensor}
    */
   attach() {
-    return this;
+    throw new Error("Not Implemented");
   }
 
   /**
@@ -50,7 +59,7 @@ export class Sensor {
    * @return {Sensor}
    */
   detach() {
-    return this;
+    throw new Error("Not Implemented");
   }
 
   /**
@@ -58,8 +67,8 @@ export class Sensor {
    * @param {HTMLElement} element - Element to trigger event on
    * @param {SensorEvent} sensorEvent - Sensor event to trigger
    */
-  trigger(sensorEvent: SensorEvent) {
-    this.emitter.trigger(sensorEvent);
+  async trigger(sensorEvent: SensorEvent) {
+    await this.emitter.trigger(sensorEvent);
 
     return sensorEvent;
   }
@@ -87,7 +96,7 @@ export class Delay {
     return this._drag;
   }
 
-  constructor(delay?: number | DraggableOptions["condition"]["delay"]) {
+  constructor(delay?: Condition["delay"]) {
     if (delay == undefined) return;
     if (typeof delay == "number") {
       this._mouse = delay;
@@ -102,3 +111,10 @@ export class Delay {
     }
   }
 }
+
+export {
+  SensorEvent,
+  DragStopSensorEvent,
+  DragMoveSensorEvent,
+  DragStartSensorEvent,
+} from "./SensorEvents";
