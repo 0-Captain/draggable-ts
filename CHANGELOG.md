@@ -1,3 +1,9 @@
+## [1.0.1](https://github.com/0-Captain/draggable-ts/compare/v1.0.0...v1.0.1) (2022-03-05)
+
+### Bug Fixes
+
+- change npm mirror ([d992781](https://github.com/0-Captain/draggable-ts/commit/d992781df755d6ffb7d8dcee7c7177e9ef10f4f6))
+
 # 1.0.0 (2022-03-05)
 
 ### Bug Fixes
