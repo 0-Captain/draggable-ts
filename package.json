@@ -15,6 +15,7 @@
     "commit": "git-cz",
     "clean": "rimraf node_modules example/node_modules",
     "prepare": "npx husky install",
+    "build:story": "pnpm -C ./example build-storybook",
     "semantic-release": "semantic-release"
   },
   "repository": {
@@ -36,6 +37,8 @@
     "@commitlint/config-conventional": "^16.0.0",
     "@rollup/plugin-commonjs": "^21.0.2",
     "@rollup/plugin-typescript": "^8.3.0",
+    "@semantic-release/changelog": "^6.0.1",
+    "@semantic-release/git": "^10.0.1",
     "@types/jest": "^27.4.0",
     "@typescript-eslint/eslint-plugin": "^5.8.1",
     "@typescript-eslint/parser": "^5.9.0",
@@ -52,10 +55,10 @@
     "rimraf": "^3.0.2",
     "rollup": "^2.63.0",
     "rollup-plugin-node-resolve": "^5.2.0",
+    "semantic-release": "^19.0.2",
     "ts-jest": "^27.1.2",
     "tslib": "^2.3.1",
-    "typescript": "^4.5.4",
-    "semantic-release": "^19.0.2"
+    "typescript": "^4.5.4"
   },
   "commitlint": {
     "extends": [
