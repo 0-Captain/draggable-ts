@@ -18,101 +18,53 @@ export class MirrorEvent extends AbstractEvent {
     super(options);
   }
 
-  /**
-   * Draggables source element
-   * @property source
-   * @type {HTMLElement}
-   * @readonly
-   */
+  /** Sensor event */
   get source() {
     return this._source as HTMLElement;
   }
 
-  /**
-   * Sensor event
-   * @property sensorEvent
-   * @type {SensorEvent}
-   * @readonly
-   */
+  /** Sensor event */
   get sensorEvent() {
     return this.options.sensorEvent;
   }
 
-  /**
-   * Drag event
-   * @property dragEvent
-   * @type {DragEvent}
-   * @readonly
-   */
+  /** Drag event */
   get dragEvent() {
     return this.options.dragEvent;
   }
 
-  /**
-   * Original event that triggered sensor event
-   * @property originalEvent
-   * @type {Event}
-   * @readonly
-   */
+  /** Original event that triggered sensor event */
   get originalEvent() {
     return this.options.originalEvent;
   }
 
-  /**
-   * Draggables mirror element
-   * @property mirror
-   * @type {HTMLElement}
-   * @readonly
-   */
+  /** Draggables mirror element*/
   get mirror() {
     return this.options.mirror;
   }
 }
 
-/**
- * Mirror create event
- * @class MirrorCreateEvent
- * @module MirrorCreateEvent
- * @extends MirrorEvent
- */
+/** Mirror create event */
 export class MirrorCreateEvent extends MirrorEvent {
   static type = "mirror:create";
 }
 
-/**
- * Mirror attached event
- * @class MirrorAttachedEvent
- * @module MirrorAttachedEvent
- * @extends MirrorEvent
- */
+/** Mirror attached event */
 export class MirrorAttachedEvent extends MirrorEvent {
   static type = "mirror:attached";
 }
 
-/**
- * Mirror move event
- * @class MirrorMoveEvent
- * @module MirrorMoveEvent
- * @extends MirrorEvent
- */
+/** Mirror move event */
 export class MirrorMoveEvent extends MirrorEvent {
   static type = "mirror:move";
   static cancelable = true;
 
-  /**
-   * 是否超过了x轴的阈值
-   * @type {Boolean}
-   * @readonly
-   */
+  /** 是否超过了x轴的阈值 */
   get passedThreshX() {
     return this.options.passedThreshX || false;
   }
 
-  /**
-   * 是否超过了y轴的阈值
-   * @type {Boolean}
-   * @readonly
-   */
+  /** 是否超过了y轴的阈值 */
   get passedThreshY() {
     return this.options.passedThreshY || false;
   }
@@ -127,14 +79,4 @@ export class MirrorMoveEvent extends MirrorEvent {
 export class MirrorDestroyEvent extends MirrorEvent {
   static type = "mirror:destroy";
   static cancelable = true;
-
-  /**
-   * Draggables mirror element
-   * @property mirror
-   * @type {HTMLElement}
-   * @readonly
-   */
-  get mirror() {
-    return this.options.mirror;
-  }
 }

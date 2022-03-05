@@ -12,7 +12,6 @@ export { BaseEmitterEvents, Emitter } from "./Emitter";
 
 export {
   Mirror,
-  mirrorDefaultOptions,
   AbstractPlugin,
   MirrorCreateEvent,
   MirrorAttachedEvent,
@@ -28,6 +27,6 @@ export {
   DragStopSensorEvent,
   DragMoveSensorEvent,
   DragStartSensorEvent,
-  Sensor,
+  AbstractSensor,
   SensorEvent,
 } from "./Sensors";

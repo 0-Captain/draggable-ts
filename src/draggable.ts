@@ -13,16 +13,15 @@ import {
   DragStartEvent,
 } from "./Events/DragEvents";
 import { AbstractPlugin } from "./Plugins";
-import { Sensor, Delay } from "./Sensors";
+import { AbstractSensor, Delay } from "./Sensors";
 import { MouseSensor } from "./Sensors/MouseSensor";
 
 export type DraggableOptions = Partial<StrictDraggableOptions>;
 export interface StrictDraggableOptions {
-  container: string; // 拖拽容器
   draggable: string; // 容器中可拖拽的元素
   dropable: string;
   condition: Condition;
-  sensors: Array<typeof Sensor>;
+  sensors: Array<typeof AbstractSensor>;
   mirror: MirrorOptions;
   plugins: Array<typeof AbstractPlugin>;
 }
@@ -39,7 +38,6 @@ export interface Condition {
 }
 
 const defaultOptions: StrictDraggableOptions = {
-  container: ".drag-container",
   draggable: ".draggable",
   dropable: ".draggable",
   condition: {
@@ -63,10 +61,8 @@ export class DraggableBase {
     distance: this.options.condition?.distance || 0,
   };
 
-  sensors: Set<Sensor>;
+  sensors: Set<AbstractSensor>;
   plugins: Set<AbstractPlugin>;
-
-  container = document.querySelector(this.options.container) || document.body;
 
   draggableElementSet = new WeakSet(
     document.querySelectorAll(this.options.draggable)
@@ -154,7 +150,7 @@ export class DraggableBase {
     await this.emitter.trigger(dragEvent);
   };
 
-  addSensor(Sen: typeof Sensor) {
+  addSensor(Sen: typeof AbstractSensor) {
     const instanceSensor = new Sen({
       condition: this.condition,
       emitter: this.emitter,
@@ -170,7 +166,7 @@ export class DraggableBase {
     return plugin;
   }
 
-  removeSensor(sensor: Sensor) {
+  removeSensor(sensor: AbstractSensor) {
     sensor.detach();
     this.sensors.delete(sensor);
   }

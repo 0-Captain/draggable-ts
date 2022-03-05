@@ -27,7 +27,10 @@ export interface BaseEmitterEvents {
   "mirror:create": MirrorCreateEvent;
   "mirror:move": MirrorMoveEvent;
   "mirror:destroy": MirrorDestroyEvent;
+  [index: string]: AbstractEvent;
 }
+
+type Valueof<T> = T[keyof T];
 
 /**
  * The Emitter is a simple emitter class that provides you with `on()`, `off()` and `trigger()` methods
@@ -36,7 +39,7 @@ export interface BaseEmitterEvents {
  */
 export class Emitter<Events extends BaseEmitterEvents = BaseEmitterEvents> {
   private callbacks: {
-    [index in keyof Events]?: Map<(event: any) => void, number>;
+    [index in keyof Events]?: Map<(event: Events[index]) => void, number>;
   };
 
   constructor() {
@@ -87,14 +90,12 @@ export class Emitter<Events extends BaseEmitterEvents = BaseEmitterEvents> {
    * Triggers event callbacks by event object
    * @param {AbstractEvent} event
    */
-  async trigger(event: AbstractEvent) {
+  async trigger(event: Valueof<Events>) {
     const type = event.type as keyof Events;
     const callbackMap = this.callbacks[type];
     if (!callbackMap) {
       return null;
     }
-
-    const caughtErrors = [];
 
     const sortedCallbacks = Array.from(callbackMap.keys()).sort(
       (a, b) => (callbackMap.get(b) || 0) - (callbackMap.get(a) || 0)
@@ -102,16 +103,6 @@ export class Emitter<Events extends BaseEmitterEvents = BaseEmitterEvents> {
 
     for (const cb of sortedCallbacks) {
       await cb(event);
-      try {
-      } catch (error) {
-        caughtErrors.push(error);
-      }
-    }
-    if (caughtErrors.length) {
-      console.error(
-        `Draggable caught errors while triggering '${event.type}'`,
-        caughtErrors
-      );
     }
 
     return this;

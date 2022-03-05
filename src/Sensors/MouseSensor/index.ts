@@ -1,5 +1,5 @@
 import { closest, distance as calcDistance } from "@utils";
-import { Sensor, SensorOptions } from "..";
+import { AbstractSensor, SensorOptions } from "../AbstactSensor";
 import {
   DragStartSensorEvent,
   DragMoveSensorEvent,
@@ -10,12 +10,9 @@ import {
 type EventHandler = (e: any) => any;
 
 /**
- * This sensor picks up native browser mouse events and dictates drag operations
- * @class MouseSensor
- * @module MouseSensor
- * @extends Sensor
+ * 监听浏览器的mouse事件
  */
-export class MouseSensor extends Sensor {
+export class MouseSensor extends AbstractSensor {
   // Mouse down timer which will end up triggering the drag start operation
   mouseDownTimerId?: number;
   dragging = false;
@@ -106,10 +103,7 @@ export class MouseSensor extends Sensor {
   };
 
   /**
-   * Detect change in distance, starting drag when both
-   * delay and distance requirements are met
-   * @private
-   * @param {Event} event - Mouse move event
+   * 检测鼠标按下后到鼠标开始移动的过程中是否满足时间和距离的条件，不满足则取消拖拽。
    */
   onDistanceChange = (
     event: MouseEvent | { pageX: number; pageY: number },
@@ -254,11 +248,7 @@ export class MouseSensor extends Sensor {
     this.mouseDownEvent = undefined;
   };
 
-  /**
-   * Context menu handler
-   * @private
-   * @param {Event} event - Context menu event
-   */
+  /* 阻止鼠标右键点击出现的菜单 */
   onContextMenuWhileDragging = (event: Event) => {
     event.preventDefault();
   };

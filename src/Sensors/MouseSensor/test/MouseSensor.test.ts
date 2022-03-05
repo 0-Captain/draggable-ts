@@ -1,5 +1,5 @@
 import { MouseSensor } from "..";
-import { Delay } from "../..";
+import { Delay } from "../../AbstactSensor";
 import { Emitter } from "../../../Emitter";
 import { createSandbox } from "../../../../test/helper";
 

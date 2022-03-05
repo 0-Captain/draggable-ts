@@ -1,4 +1,5 @@
 export { Draggable } from "./draggable";
+export type { DraggableOptions } from "./draggable";
 export {
   DragEndEvent,
   DragEvent,
@@ -19,7 +20,7 @@ export {
 } from "./Plugins";
 export type { MirrorEventProps, MirrorOptions } from "./Plugins";
 
-export { Sensor, SensorEvent } from "./Sensors";
+export { AbstractSensor, MouseSensor, SensorEvent } from "./Sensors";
 export type {
   SensorOptions,
   DragStopSensorEvent,

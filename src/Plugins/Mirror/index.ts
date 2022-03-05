@@ -41,9 +41,7 @@ export class Mirror extends AbstractPlugin {
     ...this.draggable.options.mirror,
   };
 
-  /**
-   * 监听scroll的距离，从而计算镜像移动的距离
-   */
+  /** 监听scroll的距离，从而计算镜像移动的距离 */
   scrollOffset = { x: 0, y: 0 };
 
   initialScrollOffset = {
@@ -76,9 +74,7 @@ export class Mirror extends AbstractPlugin {
       .off("mirror:move", this.onMirrorMove);
   }
 
-  /**
-   * 获取mirror的options
-   */
+  /** 获取mirror的options */
   getOptions() {
     return this.draggable.options.mirror || {};
   }
@@ -320,13 +316,7 @@ export class Mirror extends AbstractPlugin {
       .then(setState);
   };
 
-  /**
-   * 根据appendTo获取container
-   * @private
-   * @param {Object} options
-   * @param {HTMLElement} options.source - Current source
-   * @return {HTMLElement}
-   */
+  /** 根据appendTo获取container */
   private getMirrorContainer() {
     if (this.options.appendTo) {
       if (typeof this.options.appendTo === "string") {
@@ -341,9 +331,7 @@ export class Mirror extends AbstractPlugin {
   }
 }
 
-/**
- * 初始化镜像元素时计算source的位置信息
- */
+/** 初始化镜像元素时计算source的位置信息 */
 function computeMirrorDimensions<T extends { source: HTMLElement }>(data: T) {
   return withPromise<T & { sourceRect: DOMRect }>((resolve) => {
     const sourceRect = data.source.getBoundingClientRect();
@@ -351,9 +339,7 @@ function computeMirrorDimensions<T extends { source: HTMLElement }>(data: T) {
   });
 }
 
-/**
- * 初始化镜像元素时计算offset，如果options中没有配置，那么offset就是点击位置到元素左上角的距离的负数
- */
+/** 初始化镜像元素时计算offset，如果options中没有配置，那么offset就是点击位置到元素左上角的距离的负数 */
 function calculateMirrorOffset<
   T extends {
     sensorEvent: SensorEvent;
@@ -380,9 +366,7 @@ function calculateMirrorOffset<
   );
 }
 
-/**
- * 初始化的时候计算元素样式，将source的样式应用到mirror上。
- */
+/** 初始化的时候计算元素样式，将source的样式应用到mirror上。 */
 function resetMirror<
   T extends {
     mirror: HTMLElement;
@@ -418,9 +402,7 @@ function resetMirror<
   });
 }
 
-/**
- * 移除元素id，防止对使用queryselector时对source产生影响
- */
+/** 移除元素id，防止对使用queryselector时对source产生影响 */
 function removeMirrorID<
   T extends {
     mirror: HTMLElement;
@@ -434,9 +416,7 @@ function removeMirrorID<
   });
 }
 
-/**
- * 计算镜像相对于初始位置的便宜，也就是鼠标移动的距离，使用transform性能更好
- */
+/** 计算镜像相对于初始位置的便宜，也就是鼠标移动的距离，使用transform性能更好 */
 function positionMirror({ withFrame = false, initial = false } = {}) {
   return <
     T extends {
@@ -510,9 +490,7 @@ function positionMirror({ withFrame = false, initial = false } = {}) {
   };
 }
 
-/**
- * 通过requestAnimationFrame减少不必要的运算
- */
+/** 通过requestAnimationFrame减少不必要的运算 */
 function withPromise<T>(
   callback: (resolve: (val: T) => void, reject: () => void) => void,
   { raf = false } = {}
@@ -528,9 +506,7 @@ function withPromise<T>(
   });
 }
 
-/**
- * 如果是浏览器原生拖拽事件的话通常不需要mirror
- */
+/** 如果是浏览器原生拖拽事件的话通常不需要mirror */
 function isNativeDragEvent(sensorEvent: SensorEvent) {
   return /^drag/.test(sensorEvent.originalEvent.type);
 }
