@@ -15,7 +15,7 @@
     "commit": "git-cz",
     "clean": "rimraf node_modules example/node_modules",
     "prepare": "npx husky install",
-    "build:story": "pnpm -C ./example build-storybook",
+    "build:story": "npm run build & pnpm -C ./example build-storybook",
     "semantic-release": "semantic-release"
   },
   "repository": {
