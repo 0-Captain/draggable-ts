@@ -1,33 +1,62 @@
-import { AbstractEvent } from ".";
+import { SensorEvent } from "@sensors/SensorEvents";
+import { AbstractEvent } from "./AbstractEvent";
 
-export class DraggableInit {}
+export interface DragEventProps {
+  source: HTMLElement;
+  target: HTMLElement | null;
+  originalEvent: Event;
+  sensorEvent: SensorEvent;
+  over: HTMLElement | null;
+}
+export class DragEvent extends AbstractEvent {
+  static type = "drag";
 
-export class DragStartEvent extends AbstractEvent {
+  constructor(private options: DragEventProps) {
+    super({
+      source: options.source,
+      originalEvent: options.originalEvent,
+    });
+  }
+
+  get source() {
+    return this.options.source;
+  }
+
+  get target() {
+    return this.options.target;
+  }
+
+  get over() {
+    return this.options.over || null;
+  }
+
+  get sensorEvent() {
+    return this.options.sensorEvent;
+  }
+}
+
+export class DragStartEvent extends DragEvent {
   static type = "drag:start";
-  originalEvent: Event;
 
-  constructor(data: any) {
-    super();
-    this.originalEvent = data.originalEvent;
+  private _cancel = false;
+
+  get canceled() {
+    return this._cancel;
+  }
+
+  cancel() {
+    this._cancel = true;
   }
 }
 
-export class DragMoveEvent extends AbstractEvent {
+export class DragMoveEvent extends DragEvent {
   static type = "drag:move";
-  originalEvent: Event;
-
-  constructor(data: any) {
-    super();
-    this.originalEvent = data.originalEvent;
-  }
 }
 
-export class DragEndEvent extends AbstractEvent {
+export class DragEndEvent extends DragEvent {
   static type = "drag:end";
-  originalEvent: Event;
+}
 
-  constructor(data: any) {
-    super();
-    this.originalEvent = data.originalEvent;
-  }
+export class DragOverEvent extends DragEvent {
+  static type = "drag:over";
 }

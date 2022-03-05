@@ -1,17 +1,7 @@
 import { AbstractEvent } from "../../Events";
 import { Emitter, BaseEmitterEvents } from "../../Emitter";
-
-declare global {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
-  namespace jest {
-    interface Matchers<R> {
-      isMapKey(key: unknown): R;
-    }
-  }
-}
-
 expect.extend({
-  isMapKey(map: Map<any, any>, key: any) {
+  isMapKey(map: Map<unknown, unknown>, key: unknown) {
     const pass = map.has(key);
 
     if (pass) {
@@ -29,10 +19,12 @@ expect.extend({
 });
 
 const TestEventType = "test:event";
-
+const props = {
+  originalEvent: new Event("testEvent"),
+  source: document.createElement("div"),
+};
 class TestEvent extends AbstractEvent {
   static type = TestEventType;
-  originalEvent = new Event("testEvent");
 }
 
 interface TestEmitterEvents extends BaseEmitterEvents {
@@ -50,7 +42,7 @@ test("registers a callback by event type", () => {
 
   emitter.on(TestEventType, callback);
 
-  expect(emitter.events[TestEventType]).isMapKey(callback);
+  expect(emitter.listeners[TestEventType]).isMapKey(callback);
 });
 
 test("removes a callback by event type", () => {
@@ -58,15 +50,16 @@ test("removes a callback by event type", () => {
 
   emitter.on(TestEventType, callback);
 
-  expect(emitter.events[TestEventType]).isMapKey(callback);
+  expect(emitter.listeners[TestEventType]).isMapKey(callback);
 
   emitter.off(TestEventType, callback);
 
-  expect(emitter.events[TestEventType]).not.isMapKey(callback);
+  expect(emitter.listeners[TestEventType]).not.isMapKey(callback);
 });
 
 test("triggers callbacks on event with test event", () => {
-  const testEvent = new TestEvent();
+  const testEvent = new TestEvent(props);
+
   const callback = jest.fn();
 
   emitter.on(TestEventType, callback);
@@ -79,7 +72,7 @@ test("triggers callbacks on event with test event", () => {
 test("catches errors from listeners and re-throws at the end of the trigger phase", async () => {
   const consoleErrorSpy = jest.fn();
 
-  const testEvent = new TestEvent();
+  const testEvent = new TestEvent(props);
   const error = new Error("Error");
   const callbacks = [
     jest.fn(),
@@ -108,7 +101,7 @@ test("catches errors from listeners and re-throws at the end of the trigger phas
 });
 
 test("trigger callbacks order by priority", async () => {
-  const testEvent = new TestEvent();
+  const testEvent = new TestEvent(props);
 
   const callOrder: number[] = [];
   const callbacks = [

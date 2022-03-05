@@ -1,8 +1,9 @@
-export abstract class AbstractEvent {
-  static type = "event";
-  abstract originalEvent: Event;
-
-  get type(): string {
-    return (this.constructor as unknown as AbstractEvent).type;
-  }
-}
+export {
+  DragEndEvent,
+  DragStartEvent,
+  DragMoveEvent,
+  DragEvent,
+} from "./DragEvents";
+export type { DragEventProps } from "./DragEvents";
+export { AbstractEvent } from "./AbstractEvent";
+export type { AbstractEventProps } from "./AbstractEvent";

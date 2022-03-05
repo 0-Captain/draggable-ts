@@ -1,29 +1,32 @@
-export { Draggable } from "./draggable";
-export type { DraggableOptions } from "./draggable";
+export { DraggableOptions, Draggable } from "./draggable";
 export {
+  DragEventProps,
+  AbstractEventProps,
   DragEndEvent,
   DragEvent,
   DragMoveEvent,
   DragStartEvent,
   AbstractEvent,
 } from "./Events";
-export { Emitter } from "./Emitter";
+export { BaseEmitterEvents, Emitter } from "./Emitter";
+
 export {
   Mirror,
-  mirrorDefaultOptions,
   AbstractPlugin,
   MirrorCreateEvent,
   MirrorAttachedEvent,
   MirrorDestroyEvent,
   MirrorEvent,
   MirrorMoveEvent,
+  MirrorEventProps,
+  MirrorOptions,
 } from "./Plugins";
-export type { MirrorEventProps, MirrorOptions } from "./Plugins";
 
-export { AbstractSensor, MouseSensor, SensorEvent } from "./Sensors";
-export type {
+export {
   SensorOptions,
   DragStopSensorEvent,
   DragMoveSensorEvent,
   DragStartSensorEvent,
+  AbstractSensor,
+  SensorEvent,
 } from "./Sensors";
