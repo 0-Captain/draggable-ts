@@ -76,21 +76,25 @@ test("does not trigger `drag:start` event when clicking on non draggable element
   expect(eventCallbacks).not.toBeCalled();
 });
 
-test("MouseSensor: prevents context menu while dragging", async () => {
-  const events = new MouseEvent("contextmenu");
-  const originHandler = mouseSensor.onContextMenuWhileDragging;
-  mouseSensor.onContextMenuWhileDragging = jest.fn().mockImplementation(() => {
-    originHandler(events);
-  });
+test("MouseSensor: prevents context menu while dragging", () => {
+  mouseSensor.onContextMenuWhileDragging = jest.fn();
 
-  draggableElement.dispatchEvent(new MouseEvent("mousedown"));
-  jest.runOnlyPendingTimers();
-  draggableElement.dispatchEvent(new MouseEvent("contextmenu"));
+  draggableElement.dispatchEvent(
+    new MouseEvent("mousedown", {
+      bubbles: true,
+    })
+  );
+  jest.runAllTimers();
+  draggableElement.dispatchEvent(
+    new MouseEvent("contextmenu", { bubbles: true })
+  );
 
   expect(mouseSensor.onContextMenuWhileDragging).toBeCalled();
+
+  jest.runAllTimers();
 });
 
-it("prevents native drag when initiating drag flow", () => {
+test("prevents native drag when initiating drag flow", () => {
   const dragEvent1 = triggerEvent(draggableElement, "dragstart");
   expect(dragEvent1).not.toHaveDefaultPrevented();
 
