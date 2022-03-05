@@ -9,9 +9,7 @@ import {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type EventHandler = (e: any) => any;
 
-/**
- * 监听浏览器的mouse事件
- */
+/** 监听浏览器的mouse事件 */
 export class MouseSensor extends AbstractSensor {
   // Mouse down timer which will end up triggering the drag start operation
   mouseDownTimerId?: number;
@@ -26,43 +24,27 @@ export class MouseSensor extends AbstractSensor {
   private isDelay = false;
   private isDistance = false;
 
-  mouseDownEvent?: MouseEvent;
-
   get canStartDrag() {
     return this.isDelay && this.isDistance;
   }
 
-  /**
-   * MouseSensor constructor.
-   * @constructs MouseSensor
-   * @param {HTMLElement[]|NodeList|HTMLElement} containers - Containers
-   * @param {Object} options - Options
-   */
   constructor(options: SensorOptions) {
     super(options);
   }
 
-  /**
-   * Attaches sensors event listeners to the DOM
-   */
+  /** Attaches sensors event listeners to the DOM */
   attach() {
     document.addEventListener("mousedown", this.onMouseDown, true);
     return this;
   }
 
-  /**
-   * Detaches sensors event listeners to the DOM
-   */
+  /** Detaches sensors event listeners to the DOM */
   detach() {
     document.removeEventListener("mousedown", this.onMouseDown, true);
     return this;
   }
 
-  /**
-   * Mouse down handler
-   * @private
-   * @param {Event} event - Mouse down event
-   */
+  /** Mouse down handler */
   onMouseDown = (event: MouseEvent) => {
     if (event.button !== 0 || event.ctrlKey || event.metaKey) {
       return;
@@ -88,7 +70,7 @@ export class MouseSensor extends AbstractSensor {
       event.clientY
     ) as HTMLElement;
 
-    this.mouseDownEvent = event;
+    this.startEvent = event;
 
     this.addEvents(
       this.onMouseUp,
@@ -193,11 +175,7 @@ export class MouseSensor extends AbstractSensor {
     await this.trigger(dragMoveEvent);
   };
 
-  /**
-   * Mouse up handler
-   * @private
-   * @param {Event} event - Mouse up event
-   */
+  /** Mouse up handler */
   onMouseUp = async (event: MouseEvent) => {
     // console.log("mouse up");
     clearTimeout(this.mouseDownTimerId);
@@ -245,7 +223,6 @@ export class MouseSensor extends AbstractSensor {
     // document.removeEventListener("mousemove", );
 
     this.dragging = false;
-    this.mouseDownEvent = undefined;
   };
 
   /* 阻止鼠标右键点击出现的菜单 */

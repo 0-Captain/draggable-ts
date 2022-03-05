@@ -130,13 +130,8 @@ function triggerEvent(element: HTMLElement, type: string, options = {}) {
 
 // }
 
-/**
- * @description: 执行callback函数时，让document.elementFromPoint调用结果返回 target。
- * 原因是jsdom不支持document.elementFromPoint
- * @param {*} target
- * @param {*} callback
- * @return {*}
- */
+/** 执行callback函数时，让document.elementFromPoint调用结果返回 target。
+ * 原因是jsdom不支持document.elementFromPoint */
 export function withElementFromPoint<T extends () => any>(
   target: HTMLElement,
   callback: T

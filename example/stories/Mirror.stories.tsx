@@ -48,7 +48,7 @@ const dafaultTodoList = [
   "4.下午6:00，吃晚饭，",
 ];
 
-export function Sortable(options: DraggableOptions = defaultOptions) {
+export function MirrorOptions(options: DraggableOptions = defaultOptions) {
   const [data, setData] = useState<string[]>(dafaultTodoList);
 
   const dragEndHandler = useCallback(
@@ -79,7 +79,21 @@ export function Sortable(options: DraggableOptions = defaultOptions) {
   return (
     <div>
       <p>基础的sortable排序</p>
-      <TodoList items={data} />
+      <div
+        style={{
+          display: "flex",
+        }}
+      >
+        <TodoList items={data} />
+        <TodoList items={data} />
+      </div>
     </div>
   );
 }
+
+export default {
+  title: "Example/Sortable",
+  component: Mirror,
+  // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
+  argTypes,
+};

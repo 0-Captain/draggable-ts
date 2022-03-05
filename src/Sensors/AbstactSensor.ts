@@ -23,9 +23,7 @@ export class AbstractSensor {
   readonly draggableELementSet = this.options.draggableElementSet;
   readonly distance = this.options.condition.distance;
 
-  startEvent: Event = new Event("");
-  moveEvent: Event = new Event("");
-  endEvent: Event = new Event("");
+  startEvent!: Event;
 
   /**
    * @description: 正在拖拽的元素，代表可拖动的DOM节点

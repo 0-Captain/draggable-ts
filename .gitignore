@@ -3,6 +3,7 @@
 # dependencies
 /node_modules
 example/node_modules
+example/storybook-static
 
 # testing
 /coverage

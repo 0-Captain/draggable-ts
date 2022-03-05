@@ -13,7 +13,7 @@
   "dependencies": {
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "draggable-ts": "workspace:^1.0.0"
+    "draggable-ts": "workspace:*"
   },
   "devDependencies": {
     "@babel/core": "^7.16.7",
