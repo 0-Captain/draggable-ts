@@ -126,10 +126,9 @@ export class MouseSensor extends AbstractSensor {
       ...initPosition,
     });
 
-    await this.trigger(dragStartEvent);
-
     this.dragging = true;
     if (this.dragging) {
+      console.log("add listener");
       document.addEventListener(
         "contextmenu",
         this.onContextMenuWhileDragging,
@@ -138,6 +137,7 @@ export class MouseSensor extends AbstractSensor {
 
       this.addEvents(this.onMouseMove);
     }
+    await this.trigger(dragStartEvent);
   };
 
   /**

@@ -97,12 +97,24 @@ export class Emitter<Events extends BaseEmitterEvents = BaseEmitterEvents> {
       return null;
     }
 
+    const caughtErrors = [];
+
     const sortedCallbacks = Array.from(callbackMap.keys()).sort(
       (a, b) => (callbackMap.get(b) || 0) - (callbackMap.get(a) || 0)
     );
 
     for (const cb of sortedCallbacks) {
-      await cb(event);
+      try {
+        await cb(event);
+      } catch (error) {
+        caughtErrors.push(error);
+      }
+    }
+    if (caughtErrors.length) {
+      console.error(
+        `Draggable caught errors while triggering '${event.type}'`,
+        caughtErrors
+      );
     }
 
     return this;
