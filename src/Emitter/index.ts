@@ -1,33 +1,9 @@
-// import { AbstractEvent } from "../Events/AbstractEvent";
-
-import {
-  MirrorCreateEvent,
-  MirrorDestroyEvent,
-  MirrorMoveEvent,
-} from "@plugins/Mirror/MirrorEvents";
 import { AbstractEvent } from "../Events";
-import {
-  DragEndEvent,
-  DragMoveEvent,
-  DragStartEvent,
-} from "../Events/DragEvents";
-import {
-  DragMoveSensorEvent,
-  DragStartSensorEvent,
-  DragStopSensorEvent,
-} from "../Sensors/SensorEvents";
 
-export interface BaseEmitterEvents {
-  "drag:start": DragStartEvent;
-  "drag:move": DragMoveEvent;
-  "drag:end": DragEndEvent;
-  "sensor:dragstart": DragStartSensorEvent;
-  "sensor:dragmove": DragMoveSensorEvent;
-  "sensor:dragstop": DragStopSensorEvent;
-  "mirror:create": MirrorCreateEvent;
-  "mirror:move": MirrorMoveEvent;
-  "mirror:destroy": MirrorDestroyEvent;
-  [index: string]: AbstractEvent;
+export interface AbstractEmitterEvents {
+  readonly [index: string]: AbstractEvent;
+  readonly [index: number]: never;
+  readonly [index: symbol]: never;
 }
 
 type Valueof<T> = T[keyof T];
@@ -37,7 +13,7 @@ type Valueof<T> = T[keyof T];
  * @class Emitter
  * @module Emitter
  */
-export class Emitter<Events extends BaseEmitterEvents = BaseEmitterEvents> {
+export class Emitter<Events extends AbstractEmitterEvents> {
   private callbacks: {
     [index in keyof Events]?: Map<(event: Events[index]) => void, number>;
   };
@@ -90,7 +66,7 @@ export class Emitter<Events extends BaseEmitterEvents = BaseEmitterEvents> {
    * Triggers event callbacks by event object
    * @param {AbstractEvent} event
    */
-  async trigger(event: Valueof<Events>) {
+  async trigger(event: AbstractEvent) {
     const type = event.type as keyof Events;
     const callbackMap = this.callbacks[type];
     if (!callbackMap) {
@@ -105,7 +81,7 @@ export class Emitter<Events extends BaseEmitterEvents = BaseEmitterEvents> {
 
     for (const cb of sortedCallbacks) {
       try {
-        await cb(event);
+        await cb(event as Valueof<Events>);
       } catch (error) {
         caughtErrors.push(error);
       }
