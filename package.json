@@ -1,6 +1,6 @@
 {
   "name": "draggable-ts",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "### 高性能的ts通用拖拽库",
   "main": "dist/index.js",
   "types": "dist/src/index.d.ts",

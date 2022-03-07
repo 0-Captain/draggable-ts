@@ -1,3 +1,13 @@
+# [1.1.0](https://github.com/0-Captain/draggable-ts/compare/v1.0.1...v1.1.0) (2022-03-07)
+
+### Bug Fixes
+
+- 🐛 types ([b31c88d](https://github.com/0-Captain/draggable-ts/commit/b31c88d13fd75c30321c7d6432e07e3de7addeda))
+
+### Features
+
+- 🎸 Emitter 类型可拓展 ([330c416](https://github.com/0-Captain/draggable-ts/commit/330c41677eea2499fb48dd721e860547ac0571fc))
+
 ## [1.0.1](https://github.com/0-Captain/draggable-ts/compare/v1.0.0...v1.0.1) (2022-03-05)
 
 ### Bug Fixes
