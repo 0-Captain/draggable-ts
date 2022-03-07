@@ -26,7 +26,7 @@ export interface MirrorOptions {
 }
 
 export const mirrorDefaultOptions: MirrorOptions = {
-  constrainDimensions: false,
+  constrainDimensions: true,
   xAxis: true,
   yAxis: true,
   cursorOffsetX: null,

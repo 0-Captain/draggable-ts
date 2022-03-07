@@ -5,14 +5,19 @@ import {
   DragStopSensorEvent,
 } from "@sensors/SensorEvents";
 import { closest } from "@utils";
-import { Emitter } from "./Emitter";
+import { AbstractEmitterEvents, Emitter } from "./Emitter";
 import {
   DragEndEvent,
   DragMoveEvent,
   DragOverEvent,
   DragStartEvent,
 } from "./Events/DragEvents";
-import { AbstractPlugin } from "./Plugins";
+import {
+  AbstractPlugin,
+  MirrorCreateEvent,
+  MirrorDestroyEvent,
+  MirrorMoveEvent,
+} from "./Plugins";
 import { AbstractSensor, Delay } from "./Sensors";
 import { MouseSensor } from "./Sensors/MouseSensor";
 
@@ -53,8 +58,20 @@ const defaultOptions: StrictDraggableOptions = {
   plugins: [Mirror],
 };
 
-export class DraggableBase {
-  emitter = new Emitter();
+export interface BaseEmitterEvents extends AbstractEmitterEvents {
+  readonly "drag:start": DragStartEvent;
+  readonly "drag:move": DragMoveEvent;
+  readonly "drag:end": DragEndEvent;
+  readonly "sensor:dragstart": DragStartSensorEvent;
+  readonly "sensor:dragmove": DragMoveSensorEvent;
+  readonly "sensor:dragstop": DragStopSensorEvent;
+  readonly "mirror:create": MirrorCreateEvent;
+  readonly "mirror:move": MirrorMoveEvent;
+  readonly "mirror:destroy": MirrorDestroyEvent;
+}
+
+export class DraggableBase<EventsMap extends BaseEmitterEvents> {
+  emitter = new Emitter<BaseEmitterEvents & EventsMap>();
 
   condition = {
     delay: new Delay(this.options.condition?.delay),
@@ -153,7 +170,7 @@ export class DraggableBase {
   addSensor(Sen: typeof AbstractSensor) {
     const instanceSensor = new Sen({
       condition: this.condition,
-      emitter: this.emitter,
+      emitter: this.emitter as Emitter<BaseEmitterEvents>,
       draggableElementSet: this.draggableElementSet,
     });
     instanceSensor.attach();
@@ -176,7 +193,9 @@ export class DraggableBase {
   }
 }
 
-export class Draggable extends DraggableBase {
+export class Draggable<
+  EventsMap extends BaseEmitterEvents = BaseEmitterEvents
+> extends DraggableBase<EventsMap> {
   constructor(options: DraggableOptions) {
     super(Object.assign(options, defaultOptions));
   }

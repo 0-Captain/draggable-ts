@@ -1,5 +1,5 @@
 import { Condition } from "../draggable";
-import { Emitter } from "../Emitter";
+import { AbstractEmitterEvents, Emitter } from "../Emitter";
 import { SensorEvent } from "./SensorEvents";
 
 export interface SensorOptions {
@@ -7,7 +7,7 @@ export interface SensorOptions {
     delay: Delay;
     distance: number;
   };
-  emitter: Emitter;
+  emitter: Emitter<AbstractEmitterEvents>;
   // container: Element;
   draggableElementSet: WeakSet<Element>;
 }

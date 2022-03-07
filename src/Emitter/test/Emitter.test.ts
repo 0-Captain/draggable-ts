@@ -1,5 +1,6 @@
 import { AbstractEvent } from "../../Events";
-import { Emitter, BaseEmitterEvents } from "../../Emitter";
+import { Emitter } from "../../Emitter";
+import { BaseEmitterEvents } from "src/draggable";
 expect.extend({
   isMapKey(map: Map<unknown, unknown>, key: unknown) {
     const pass = map.has(key);
