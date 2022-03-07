@@ -128,7 +128,7 @@ export class MouseSensor extends AbstractSensor {
 
     this.dragging = true;
     if (this.dragging) {
-      console.log("add listener");
+      // console.log("add listener");
       document.addEventListener(
         "contextmenu",
         this.onContextMenuWhileDragging,

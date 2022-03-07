@@ -1,4 +1,4 @@
-export { DraggableOptions, Draggable } from "./draggable";
+export { DraggableOptions, Draggable, BaseEmitterEvents } from "./draggable";
 export {
   DragEventProps,
   AbstractEventProps,
@@ -8,7 +8,7 @@ export {
   DragStartEvent,
   AbstractEvent,
 } from "./Events";
-export { BaseEmitterEvents, Emitter } from "./Emitter";
+export { Emitter } from "./Emitter";
 
 export {
   Mirror,

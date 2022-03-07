@@ -2,6 +2,7 @@ import { MouseSensor } from "..";
 import { Delay } from "../../AbstactSensor";
 import { Emitter } from "../../../Emitter";
 import { createSandbox } from "../../../../test/helper";
+import { BaseEmitterEvents } from "src/draggable";
 
 expect.extend({
   toHaveDefaultPrevented(e: Event) {
@@ -49,7 +50,7 @@ beforeEach(() => {
   dispatchEventPolyfill(notDraggableElement);
 
   mouseSensor = new MouseSensor({
-    emitter: new Emitter(),
+    emitter: new Emitter<BaseEmitterEvents>(),
     condition: {
       delay: new Delay(0),
       distance: 0,

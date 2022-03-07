@@ -170,7 +170,7 @@ export class DraggableBase<EventsMap extends BaseEmitterEvents> {
   addSensor(Sen: typeof AbstractSensor) {
     const instanceSensor = new Sen({
       condition: this.condition,
-      emitter: this.emitter,
+      emitter: this.emitter as Emitter<BaseEmitterEvents>,
       draggableElementSet: this.draggableElementSet,
     });
     instanceSensor.attach();
