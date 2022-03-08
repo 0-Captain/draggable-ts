@@ -7,21 +7,19 @@ import {
   mirrorDefaultOptions,
   DraggableOptions,
 } from "draggable-ts";
-import { TodoList } from "../components/TodoList";
-
-const defaultCondition = {
-  delay: {
-    mouse: 0,
-    touch: 100,
-    drag: 0,
-  },
-  distance: 0,
-};
+import { TodoList } from "./TodoList";
 
 const defaultOptions = {
   draggable: ".draggable",
   dropable: ".draggable",
-  condition: defaultCondition,
+  condition: {
+    delay: {
+      mouse: 0,
+      touch: 100,
+      drag: 0,
+    },
+    distance: 0,
+  },
   mirror: mirrorDefaultOptions,
   sensors: [MouseSensor],
   plugins: [Mirror],
@@ -34,9 +32,11 @@ const dafaultTodoList = [
   "4.下午6:00，吃晚饭，",
 ];
 
-export function Sortable(
-  condition: DraggableOptions["condition"] = defaultCondition
-) {
+export default function MirrorOptions({
+  options,
+}: {
+  options: DraggableOptions;
+}) {
   const [data, setData] = useState<string[]>(dafaultTodoList);
 
   const dragEndHandler = useCallback(
@@ -56,15 +56,15 @@ export function Sortable(
   );
 
   useEffect(() => {
-    const draggable = new Draggable(
-      Object.assign(defaultOptions, defaultCondition)
-    );
+    console.log(options);
+    const draggable = new Draggable(options);
 
     draggable.emitter.on("drag:end", dragEndHandler);
     return () => {
+      console.log("detroy");
       draggable.destroy();
     };
-  }, [condition]);
+  }, [options]);
 
   return (
     <div>
@@ -79,17 +79,3 @@ export function Sortable(
     </div>
   );
 }
-
-export default {
-  title: "Example/Sortable",
-  component: Sortable,
-  // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
-  argTypes: {
-    distance: {
-      control: {
-        type: "number",
-        min: 0,
-      },
-    },
-  },
-};

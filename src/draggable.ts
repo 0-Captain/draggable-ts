@@ -89,6 +89,7 @@ export class DraggableBase<EventsMap extends BaseEmitterEvents> {
   );
 
   constructor(public options: StrictDraggableOptions) {
+    console.log("init draggable");
     this.options = Object.assign(options, defaultOptions);
 
     this.emitter.on("sensor:dragstart", this.onDragStart);
@@ -178,7 +179,9 @@ export class DraggableBase<EventsMap extends BaseEmitterEvents> {
   }
 
   addPlugin(Plugin: typeof AbstractPlugin) {
-    const plugin = new Plugin(this);
+    const plugin = new Plugin(
+      this as unknown as DraggableBase<BaseEmitterEvents>
+    );
     plugin.attach();
     return plugin;
   }
@@ -190,6 +193,8 @@ export class DraggableBase<EventsMap extends BaseEmitterEvents> {
 
   destroy() {
     //
+    this.sensors.forEach((sen) => sen.detach());
+    this.plugins.forEach((plugin) => plugin.detach());
   }
 }
 

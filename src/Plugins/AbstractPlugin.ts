@@ -1,4 +1,4 @@
-import { DraggableBase } from "src/draggable";
+import { BaseEmitterEvents, DraggableBase } from "src/draggable";
 
 /**
  * All draggable plugins inherit from this class.
@@ -12,7 +12,7 @@ export class AbstractPlugin {
    * @constructs AbstractPlugin
    * @param {Draggable} draggable - Draggable instance
    */
-  constructor(public draggable: DraggableBase) {
+  constructor(public draggable: DraggableBase<BaseEmitterEvents>) {
     //
   }
 
