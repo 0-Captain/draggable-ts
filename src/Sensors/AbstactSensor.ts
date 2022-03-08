@@ -35,7 +35,7 @@ export class AbstractSensor {
    */
   target: HTMLElement | null = null;
 
-  constructor(private options: SensorOptions) {
+  constructor(public options: SensorOptions) {
     // if (!(options.emitter instanceof Emitter)) {
     //   throw new Error("emitter must be contain in options");
     // }

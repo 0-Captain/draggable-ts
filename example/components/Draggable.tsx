@@ -7,7 +7,7 @@ import {
   mirrorDefaultOptions,
   DraggableOptions,
 } from "draggable-ts";
-import { TodoList } from "../components/TodoList";
+import { TodoList } from "./TodoList";
 
 const defaultOptions = {
   draggable: ".draggable",
@@ -32,7 +32,11 @@ const dafaultTodoList = [
   "4.下午6:00，吃晚饭，",
 ];
 
-export function Sortable(options: DraggableOptions) {
+export default function MirrorOptions({
+  options,
+}: {
+  options: DraggableOptions;
+}) {
   const [data, setData] = useState<string[]>(dafaultTodoList);
 
   const dragEndHandler = useCallback(
@@ -52,10 +56,12 @@ export function Sortable(options: DraggableOptions) {
   );
 
   useEffect(() => {
+    console.log(options);
     const draggable = new Draggable(options);
 
     draggable.emitter.on("drag:end", dragEndHandler);
     return () => {
+      console.log("detroy");
       draggable.destroy();
     };
   }, [options]);
@@ -73,10 +79,3 @@ export function Sortable(options: DraggableOptions) {
     </div>
   );
 }
-
-export default {
-  title: "Example/Sortable",
-  component: Sortable,
-  // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
-  argTypes: defaultOptions,
-};

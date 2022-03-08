@@ -11,9 +11,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "draggable-ts": "workspace:*",
     "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "draggable-ts": "workspace:*"
+    "react-dom": "^17.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.16.7",

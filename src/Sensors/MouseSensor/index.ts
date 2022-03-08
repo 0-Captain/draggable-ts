@@ -80,24 +80,20 @@ export class MouseSensor extends AbstractSensor {
 
     this.mouseDownTimerId = window.setTimeout(() => {
       this.isDelay = true;
-      this.onDistanceChange({ pageX, pageY }, true);
+      this.onDistanceChange({ pageX, pageY });
     }, this.delay.mouse);
   };
 
   /**
    * 检测鼠标按下后到鼠标开始移动的过程中是否满足时间和距离的条件，不满足则取消拖拽。
    */
-  onDistanceChange = (
-    event: MouseEvent | { pageX: number; pageY: number },
-    enable = false
-  ) => {
-    // console.log("onDistanceChange");
+  onDistanceChange = (event: MouseEvent | { pageX: number; pageY: number }) => {
     const { pageX, pageY } = event;
     const { initPosition, distance } = this;
-    this.removeEvents(this.onDistanceChange);
 
-    if (!enable) {
+    if (!this.isDelay) {
       // moved during delay
+      this.removeEvents(this.onDistanceChange);
       clearTimeout(this.mouseDownTimerId);
       return;
     }
@@ -106,6 +102,7 @@ export class MouseSensor extends AbstractSensor {
       calcDistance(initPosition.pageX, initPosition.pageY, pageX, pageY) || 0;
 
     if (distanceTravelled >= distance) {
+      this.removeEvents(this.onDistanceChange);
       this.startDrag();
     }
   };
