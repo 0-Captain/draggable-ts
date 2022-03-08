@@ -1,3 +1,9 @@
+## [1.1.1](https://github.com/0-Captain/draggable-ts/compare/v1.1.0...v1.1.1) (2022-03-08)
+
+### Bug Fixes
+
+- mouse sensor options ([80f163d](https://github.com/0-Captain/draggable-ts/commit/80f163d4a64e877f7d7cd0a5ce25cf3ae9e1602c))
+
 # [1.1.0](https://github.com/0-Captain/draggable-ts/compare/v1.0.1...v1.1.0) (2022-03-07)
 
 ### Bug Fixes
