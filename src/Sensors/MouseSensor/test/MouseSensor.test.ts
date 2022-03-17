@@ -107,12 +107,36 @@ test("prevents native drag when initiating drag flow", () => {
   draggableElement.dispatchEvent(new MouseEvent("mouseup"));
 });
 
+test("does not prevent `dragstart` event when attempting to drag non draggable element", () => {
+  //
+  let dragStartEvent: Event = new Event("dragstart");
+  drag(notDraggableElement, draggableElement, () => {
+    dragStartEvent = triggerEvent(notDraggableElement, "dragstart");
+  });
+
+  expect(dragStartEvent).not.toHaveDefaultPrevented();
+});
+
 function click(target: HTMLElement) {
   triggerEvent(target, "mousedown", { button: 0 });
   jest.runOnlyPendingTimers();
 
   triggerEvent(target, "mouseup", { button: 0 });
   triggerEvent(target, "click", { button: 0 });
+}
+
+function drag(from: HTMLElement, to: HTMLElement, cb?: () => void) {
+  const mousedown = triggerEvent(from, "mousedown", { button: 0 });
+  jest.runOnlyPendingTimers();
+
+  cb?.();
+
+  const mousemove1 = triggerEvent(from, "mousemove");
+  const mousemove2 = triggerEvent(to, "mousemove");
+
+  const mouseup = triggerEvent(to, "mouseup", { button: 0 });
+
+  return { mousedown, mousemove1, mousemove2, mouseup };
 }
 
 function triggerEvent(element: HTMLElement, type: string, options = {}) {
